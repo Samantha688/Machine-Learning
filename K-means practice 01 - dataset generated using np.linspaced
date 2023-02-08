@@ -7,10 +7,8 @@ Blog post "K-means practice 01 - dataset generated using np.linspaced"
 #import libraries 
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from sklearn.datasets import make_blobs
 
 #generate dataset
 angle = np.linspace(0,2*np.pi,20,endpoint=False)
