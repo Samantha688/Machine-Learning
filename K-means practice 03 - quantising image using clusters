@@ -1,0 +1,35 @@
+'''
+Practice taken from IBM Machine Learning Professional Certificate - Unsupervised machine learning - 04a lab
+For detailed explanation, please visit: 
+https://lhy688.wordpress.com/blog/
+Blog post "K-means practice 03 - quantising image using clusters"
+'''
+
+#import libraries 
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.cluster import KMeans
+
+#Image by <a href="https://www.freepik.com/free-photo/fresh-lime-fruit-isolated_8759417.htm#query=lemon&position=25&from_view=search&track=sph">Image by Racool_studio</a> on Freepik
+img = plt.imread('/Users/samanthalee/Downloads/lemon.jpg')
+plt.imshow(img)
+plt.axis('off')
+img.shape
+
+#create colour using R, G, B values 
+plt.imshow([[np.array([70,100,200]).astype('uint8')]])
+
+#reshape img
+img_flat = img.reshape(-1,3)
+img_flat.shape
+
+#form cluster 
+km = KMeans(n_clusters = 8, random_state = 0).fit(img_flat)
+km.cluster_centers_
+
+#replacing each row with cluster centers and reshape back to 3 dimensions
+img_flat2 = img_flat.copy()
+for i in np.unique(km.labels_):
+    img_flat2[km.labels_==i,:] = km.cluster_centers_[i]
+img2 = img_flat2.reshape(img.shape)
+plt.imshow(img2)
