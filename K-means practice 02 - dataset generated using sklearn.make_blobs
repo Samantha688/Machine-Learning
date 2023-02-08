@@ -1,3 +1,10 @@
+'''
+Practice taken from IBM Machine Learning Professional Certificate - Unsupervised machine learning - 04a lab
+For detailed explanation, please visit: 
+https://lhy688.wordpress.com/blog/
+Blog post "K-means practice 02 - dataset generated using sklearn.make_blobs"
+'''
+
 #import libraries
 import numpy as np
 from sklearn.datasets import make_blobs
