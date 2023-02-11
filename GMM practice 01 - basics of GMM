@@ -1,0 +1,82 @@
+'''
+Practice taken from IBM Machine Learning Professional Certificate - Unsupervised machine learning - GMM
+For detailed explanation, please visit: 
+https://lhy688.wordpress.com/blog/
+Blog post "GMM practice 01 - basics of GMM"
+'''
+
+#import libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as ss 
+from sklearn.mixture import GaussianMixture
+
+#define the 3 Gaussian distributions
+means = [2,7,10]
+stds = [0.2,0.5,1.6]
+weights = [0.2,0.7,0.1]
+
+#generate random sample
+mixture_idx = np.random.choice(len(means), size=1000, replace=True, p=weights)
+mixture_idx
+
+#generate one sample with the mean = 2, std = 0.6
+ss.norm.rvs(loc = means[0], scale = stds[0])
+
+#generate for 1000 samples
+X = np.fromiter((ss.norm.rvs(loc = means[i], scale = stds[i]) 
+for i in mixture_idx), dtype = np.float64)
+
+#generate value on the x-axis on the plot 
+xs = np.linspace(X.min(), X.max(), 300)
+
+#create the 3 clusters
+y0 = ss.norm.pdf(xs, loc = means[0], scale = stds[0])*weights[0] 
+y1 = ss.norm.pdf(xs, loc = means[1], scale = stds[1])*weights[1]
+y2 = ss.norm.pdf(xs, loc = means[2], scale = stds[2])*weights[2] 
+ps = y0+y1+y2
+
+#alternatively, we can avoid repetition by using for loop. The resulting ps is the Gaussian mixture
+
+ps = np.zeros_like(xs)
+for mu, s, w in zip(means, stds, weights):
+    ps += ss.norm.pdf(xs, loc = mu, scale = s)*w
+
+#check the shape, all ps, xs and y have shape of (300,)
+xs.shape 
+ps.shape
+y.shape
+
+#plotting GMM
+fig, ax = plt.subplots()
+ax.plot(xs, ps, label = 'pdf of the Gaussian mixture')
+ax.set_xlabel('X', fontsize = 15)
+ax.set_ylabel('p', fontsize = 15)
+ax.set_title('Univariate Gaussian mixture', fontsize = 15)
+plt.show()
+
+#reshape X into one col 
+X.reshape(-1,1)
+
+#changing std, mean and weights to see the effect on the Gaussian mixture
+
+#sort X in ascending order for plotting purpose
+X_sorted = np.sort(X).reshape(-1,1)
+
+#fit a GMM to the dataset with n_components = 3
+GMM = GaussianMixture(n_components = 3, random_state = 10) 
+GMM.fit(X_sorted)
+
+#using GMM.predict_proba to calculate the prob of each point to the cluster, and store the prob in prob_X
+prob_X = GMM.predict_proba(X_sorted)
+
+#plot the probabilities against x
+ax.plot(X1_sorted, prob_X1[:,0], label='Predicted Prob of x belonging to cluster 1')
+ax.plot(X1_sorted, prob_X1[:,1], label='Predicted Prob of x belonging to cluster 2')
+ax.plot(X1_sorted, prob_X1[:,2], label='Predicted Prob of x belonging to cluster 3')
+ax.scatter(2, 0,4, color = 'black')
+ax.scatter(2, 1.0, color = 'black')
+ax.plot([2, 2], [0.4, 1.0], '--', color = 'black')
+ax.legend()
+fig
+
