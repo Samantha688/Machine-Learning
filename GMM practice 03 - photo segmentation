@@ -1,0 +1,57 @@
+'''
+Practice taken from IBM Machine Learning Professional Certificate - Unsupervised machine learning - GMM
+For detailed explanation, please visit: 
+https://lhy688.wordpress.com/blog/
+Blog post "GMM practice 03 - photo segmentation"
+'''
+
+#import libraries
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.mixture import GaussianMixture
+
+#download image 
+img = plt.imread('/Users/samanthalee/Downloads/dog.jpg')
+plt.imshow(img)
+plt.axis('off')
+
+#Find the dimensions of the image
+img.shape 
+
+#reshape image into 3 columns of RGB
+X = img.reshape(-1, 3)
+X.shape 
+
+#segmenting into 2 Gaussian distributions
+n = 2
+gmm = GaussianMixture(n_components=n, covariance_type='tied')
+gmm.fit(X)
+labels = gmm.predict(X)
+labels.shape
+
+#create a zero array with the same shape as X and segmented as X
+seg = np.zeros(X.shape) 
+
+#check if X and seg have the same segmentation
+print(X[labels == 0].shape)
+print(seg[labels == 0].shape)
+print(X[labels == 1].shape)
+print(seg[labels == 1].shape) 
+
+#replace every pixel in seg with average RGB
+seg[labels == 0] = gmm.means_[0]
+seg[labels == 1] = gmm.means_[1]
+
+#alternatively we can use loop when n is larger
+for i in range(n):
+    seg[labels == i] = gmm.means_[i]
+    
+#reshape seg back to original image dimensions 
+seg = seg.reshape(img.shape).astype(np.uint8)
+
+#show the transformed image 
+plt.figure(figsize = (6,6))
+plt.imshow(seg)
+plt.axis('off')
+
+#try with n = 8, i.e. 8 clusters of color 
