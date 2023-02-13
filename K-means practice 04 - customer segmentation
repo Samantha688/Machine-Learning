@@ -1,0 +1,76 @@
+'''
+Practice taken from IBM Machine Learning Professional Certificate - Unsupervised machine learning - K-Means Clustering Lab
+For detailed explanation, please visit: 
+https://lhy688.wordpress.com/blog/
+Blog post "GMM practice 04 - customer segmentation"
+'''
+
+#Problem - segment customers based on demographcis 
+#step 1 - analyse the dataset 
+#step 2 - decide what segments 
+#step 3 - segment using clustering algorithm 
+#step 4 - devise sales strategy targeting each segment (post data analysis)
+
+#import libraries
+import numpy as np
+from sklearn.cluster import KMeans
+import pandas as pd 
+import matplotlib.pyplot as plt
+
+#the link to the dataset is provided here 
+#https://github.com/SteffiPeTaffy/machineLearningAZ/tree/master/Machine%20Learning%20A-Z%20Template%20Folder/Part%204%20-%20Clustering/Section%2024%20-%20K-Means%20Clustering
+
+# Download the dataset and read it into a Pandas dataframe
+df = pd.read_csv('Mall_Customers.csv', index_col=0)
+print(df.head())
+print(df.shape)
+
+#explore the dataset - features, male to female ratio, income vs spending to identify what segments to form 
+num_male = df[df["Genre"] == "Male"]  
+num_male.shape 
+num_female = df[df["Genre"] == "Female"]
+num_female.shape 
+print("number of male: " + str(num_male.shape[0]))
+print("number of female: " + str(num_female.shape[0]))
+
+#plot the ratio 
+plt.pie(
+    [num_male.shape[0], num_female.shape[0]], 
+    labels=['Male', 'Female'],
+    startangle=90,
+    autopct='%1.f%%',
+    colors=['purple', 'pink'])
+plt.title('Gender of survey respondants')
+plt.show()
+
+print(df['Annual Income (k$)'].describe())
+plt.hist(df['Annual Income (k$)'], bins = 10)
+plt.show()
+#skewed to the right more lower income side
+
+#annual income vs spending
+X = df[['Annual Income (k$)','Spending Score (1-100)']] 
+plt.scatter(df['Annual Income (k$)'], df['Spending Score (1-100)'])
+plt.show()
+
+#we can see there are vaguely 5 groups 
+#low income low spending
+#high income high spending
+#low income high spending 
+#high income low spending 
+#medium income medium spending 
+
+#Fit K-means model 
+km = KMeans(n_clusters = 5, random_state = 42).fit(X)
+print(km.labels_)
+print(km.labels_.shape)
+np.unique(km.labels_) #an array of labels for all the 200 data points
+
+#Plot the 5 clusters of income vs spending 
+for label in np.unique(km.labels_):
+    X_ = X[label == km.labels_]    
+    plt.scatter(X_['Annual Income (k$)'], X_['Spending Score (1-100)'], label=label)    
+    print(X_.shape, label, km.labels_)                                                  
+    print(X_)                                                                           
+plt.show()
+
