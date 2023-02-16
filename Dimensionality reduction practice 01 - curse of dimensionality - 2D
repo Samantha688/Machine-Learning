@@ -1,0 +1,50 @@
+'''
+Practice taken from IBM Machine Learning Professional Certificate - Unsupervised machine learning - Dimensionality reduction
+For detailed explanation, please visit: 
+https://lhy688.wordpress.com/blog/
+Blog post "Dimensionality reduction practice 01 - curse of dimensionality - 2D"
+'''
+
+#import libraries
+import numpy as np 
+import matplotlib.pylab as plt
+
+#plot a unit 
+#create a frame 
+fig = plt.gcf() 
+ax = fig.add_subplot(111, aspect='equal')
+
+#add_subplot(abc), meaning axb, c is the position, e.g. 
+#ax = fig.add_subplot(231)
+#ax = fig.add_subplot(232)
+#ax = fig.add_subplot(233)
+#ax = fig.add_subplot(234)
+#ax = fig.add_subplot(235)
+#ax = fig.add_subplot(236)
+
+#plot the circle
+fig.gca().add_artist(plt.Circle((0,0),1, alpha=.5)) 
+ax.set_xlim(left = -1, right = 1)
+ax.set_ylim(bottom = -1, top = 1)
+ax.scatter(0,0, s = 30, color = 'thistle')
+
+#plot a straight line from centre to radius and add a text 'r'
+#np.zeros(100) 
+#np.linspace(0,1,100)
+ax.plot(np.linspace(0,1,100), np.zeros(100), color = 'steelblue')
+ax.text(0.5, 0.25, 'r', size = 20) 
+
+#add x and y axis labels, and title 
+plt.xlabel("x covariate")
+plt.ylabel("y covariate")
+plt.title("Unit Circle")
+
+
+#plot a point outside the circle for illustrating a far away point
+ax.text(0.6,0.8,'far away',size = 10)
+ax.scatter(0.9,0.9, s= 30)
+
+#what is the percentage of the points outside circle
+#area of square = (2*r)^2 
+#area of unit circle = pi*r^2 
+#% outside of circle = 1 - pi*r^2/4*r^2 ~ 21% 
